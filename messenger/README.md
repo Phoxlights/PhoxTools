@@ -40,10 +40,6 @@ You can get a list of commands by running `cliMessenger` without any args. Also 
     ping
     setdefaultconfig
     settailoffset
-    setbuttonpin
-    settailpin
-    setstatuspin
-    setbrakepin
     pausetail
     resumetail
     setpixel
