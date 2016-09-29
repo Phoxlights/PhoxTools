@@ -1,0 +1,12 @@
+{
+  "name": "phoxlight_messenger",
+  "description": "Form and send phoxlight messages from nodejs",
+  "version": "0.0.1",
+  "dependencies": {
+    "c-struct": "0.0.3",
+    "merge": "^1.2.0",
+    "minimist": "^1.2.0",
+    "q": "^1.4.1",
+    "struct": "0.0.10"
+  }
+}
