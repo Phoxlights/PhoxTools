@@ -22,12 +22,6 @@ var BRAKE_ON = 0,
     PONG = 1001,
     WHO = 1002,
     SET_TAILLIGHT_OFFSET = 2000,
-    SET_BUTTON_PIN = 2100,
-    SET_TAILLIGHT_PIN = 2200,
-    SET_STATUS_PIN = 2300,
-    SET_TOGGLE_R_PIN = 2400,
-    SET_TOGGLE_L_PIN = 2500,
-    SET_BRAKE_PIN = 2600,
     SET_NETWORK_MODE = 2700,
     SET_DEFAULT_CONFIG = 3000,
     PAUSE_TAILLIGHT = 4000,
@@ -84,39 +78,6 @@ function createSimpleMessageSender(message){
         return createMessage(message);
     };
 }
-
-function createSetButtonPin(pin){
-    var body = Struct()
-        .word16Ule("pin")
-        .allocate();
-    body.set("pin", pin);
-    return createMessage(SET_BUTTON_PIN, body.buffer());
-}
-
-function createSetTailPin(pin){
-    var body = Struct()
-        .word16Ule("pin")
-        .allocate();
-    body.set("pin", pin);
-    return createMessage(SET_TAILLIGHT_PIN, body.buffer());
-}
-
-function createSetStatusPin(pin){
-    var body = Struct()
-        .word16Ule("pin")
-        .allocate();
-    body.set("pin", pin);
-    return createMessage(SET_STATUS_PIN, body.buffer());
-}
-
-function createSetBrakePin(pin){
-    var body = Struct()
-        .word16Ule("pin")
-        .allocate();
-    body.set("pin", pin);
-    return createMessage(SET_BRAKE_PIN, body.buffer());
-}
-
 
 function createSetPixel(x, r, g, b){
     var body = Struct()
@@ -223,50 +184,6 @@ let messageMetadata = [
         name: "Set Tail Offset",
         fields: [],
         handler: createSimpleMessageSender(SET_TAILLIGHT_OFFSET)
-    },{
-        message: "setbuttonpin",
-        name: "Set Button Pin",
-        fields: [
-            {
-                name: "pin",
-                description: "pin number",
-                type: "int"
-            }
-        ],
-        handler: createSetButtonPin
-    },{
-        message: "settailpin",
-        name: "Set Tail Pin",
-        fields: [
-            {
-                name: "pin",
-                description: "pin number",
-                type: "int"
-            }
-        ],
-        handler: createSetTailPin
-    },{
-        message: "setstatuspin",
-        name: "Set Status Pin",
-        fields: [
-            {
-                name: "pin",
-                description: "pin number",
-                type: "int"
-            }
-        ],
-        handler: createSetStatusPin
-    },{
-        message: "setbrakepin",
-        name: "Set Brake Pin",
-        fields: [
-            {
-                name: "pin",
-                description: "pin number",
-                type: "int"
-            }
-        ],
-        handler: createSetBrakePin
     },{
         message: "pausetail",
         name: "Pause Tail",

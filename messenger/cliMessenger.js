@@ -34,18 +34,6 @@ function sendMessage(args){
     // TODO - use messenger.MESSAGES field value to generate
     // the required switches and junk
     switch(message){
-        // wow, an actual use case for switch
-        // fall through :|
-        case "setbuttonpin":
-        case "settailpin":
-        case "setstatuspin":
-            if(args.pin === undefined){
-                console.log("naw man");
-                process.exit(1);
-            }
-            additionalArgs = [args.pin];
-            break;
-
         case "setpixel":
             if(args.x === undefined || args.r === undefined ||
               args.g === undefined || args.b === undefined){
