@@ -24,6 +24,9 @@ var BRAKE_ON = 0,
     SET_TAILLIGHT_OFFSET = 2000,
     SET_NETWORK_MODE = 2700,
     SET_DEFAULT_CONFIG = 3000,
+    REGISTER_COMPONENT = 3100,
+    REGISTER_CONFIRM = 3200,
+    GENERATE_NETWORK_CREDS = 3300,
     PAUSE_TAILLIGHT = 4000,
     RESUME_TAILLIGHT = 4100,
     SET_PIXEL = 4200,
@@ -133,6 +136,35 @@ Identity message:
     });
 }
 
+function createRegisterComponent(model, serial, bin, eventVer, dbVer){
+    let body = Struct()
+        .word32Ule("model")
+        .word32Ule("serial")
+        .word16Ule("bin")
+        .word16Ule("eventVer")
+        .word16Ule("dbVer")
+        .allocate();
+    body.set("model", model);
+    body.set("serial", serial);
+    body.set("bin", bin);
+    body.set("eventVer", eventVer);
+    body.set("dbVer", dbVer);
+    console.log(REGISTER_COMPONENT, model, serial, bin, eventVer, dbVer);
+    return createMessage(REGISTER_COMPONENT, body.buffer(), function(response){
+        logMessageHeader(response.header);
+        let creds = Struct()
+            .chars("ssid", 16)
+            .chars("pass", 16)
+            .allocate();
+        creds._setBuff(response.body);
+        console.log(`
+creds message:
+    ssid: ${creds.get("ssid")}
+    pass: ${creds.get("pass")}
+`);
+    });
+}
+
 let messageMetadata = [
     {
         message: "signalron",
@@ -195,6 +227,11 @@ let messageMetadata = [
         fields: [],
         handler: createSimpleMessageSender(RESUME_TAILLIGHT)
     },{
+        message: "generatenetworkcreds",
+        name: "Generate Network Creds",
+        fields: [],
+        handler: createSimpleMessageSender(GENERATE_NETWORK_CREDS)
+    },{
         message: "setpixel",
         name: "Set Pixel",
         fields: [
@@ -238,6 +275,33 @@ let messageMetadata = [
         name: "Next Preset",
         fields: [],
         handler: createSimpleMessageSender(NEXT_PRESET)
+    },{
+        message: "registercomponent",
+        name: "Register Component",
+        fields: [
+            {
+                name: "model",
+                description: "component model",
+                type: "int"
+            },{
+                name: "serial",
+                description: "component serial",
+                type: "int"
+            },{
+                name: "bin",
+                description: "component bin version",
+                type: "int"
+            },{
+                name: "eventVer",
+                description: "component event protocol version",
+                type: "int"
+            },{
+                name: "dbVer",
+                description: "component database version",
+                type: "int"
+            }
+        ],
+        handler: createRegisterComponent
     }
 ];
 
@@ -309,6 +373,15 @@ function parseMessage(message){
     console.log("message get", message);
 
     let header = createMessageHeader();
+
+    /*
+    if(header.get("length") != message.length){
+        console.log(`Response message length aint right! header: ${header.length()}, message: ${message.length}`);
+        process.exit(1);
+        return;
+    }
+    */
+
     header._setBuff(message);
     
     if(header.get("versionMajor") !== EVENT_VERSION){

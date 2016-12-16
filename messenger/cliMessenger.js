@@ -51,6 +51,18 @@ function sendMessage(args){
             additionalArgs = [args.mode];
             break;
 
+        case "registercomponent":
+            if(args.model === undefined || args.serial === undefined ||
+              args.bin === undefined || args.eventVer === undefined ||
+              args.dbVer === undefined){
+                console.log("naw man");
+                process.exit(1);
+            }
+            additionalArgs = [
+                args.model, args.serial, args.bin,
+                args.eventVer, args.dbVer];
+            break;
+
         default:
             break;
     }
